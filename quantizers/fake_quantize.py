@@ -48,7 +48,7 @@ class FakeQuantize(nn.Module):
         weights = self.quantize_weights(weights)
         out = self.run_forward_core(x, weights, bias)
         if self.quantize_out:
-            out = self.quantize_activation(x)
+            out = self.quantize_activation(out)
         return out
 
     def run_forward_core(self, x, weights, bias):

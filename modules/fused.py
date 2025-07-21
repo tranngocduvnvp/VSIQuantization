@@ -183,7 +183,7 @@ class LinearBnReLU(FakeQuantize):
         self.linear_fuse = nn.Linear(
             in_features=linear.in_features,
             out_features=linear.out_features,
-            bias=True  if is_fuse_bn or linear.bias else False# b?t bias
+            bias=True  if is_fuse_bn or linear.bias is not None else False# b?t bias
         )
         self.is_fuse_bn = is_fuse_bn
         

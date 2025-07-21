@@ -34,7 +34,7 @@ class QuantizationManager(nn.Module):
 
     def quantize(self, x):
         self.collect_qparameter(x)
-        return self.quantizer(x, self.scale, self.zero_point)
+        return self.quantizer.quantize(x, self.scale, self.zero_point)
 
     def make_learn_qparameter(self, x):
         self.scale = nn.Parameter(torch.tensor(self.scale), requires_grad=True)
