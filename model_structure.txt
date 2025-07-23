@@ -1,0 +1,635 @@
+YOLO(
+  (net): DarkNet(
+    (p1): Sequential(
+      (0): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(3, 16, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+    )
+    (p2): Sequential(
+      (0): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (1): CSP(
+        (conv1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (conv2): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(48, 32, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (quant): FloatFunctional(
+          (activation_post_process): Identity()
+        )
+        (res_m): ModuleList(
+          (0): Residual(
+            (conv1): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (conv2): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (quant): FloatFunctional(
+              (activation_post_process): Identity()
+            )
+          )
+        )
+      )
+    )
+    (p3): Sequential(
+      (0): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (1): CSP(
+        (conv1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (conv2): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (quant): FloatFunctional(
+          (activation_post_process): Identity()
+        )
+        (res_m): ModuleList(
+          (0-1): 2 x Residual(
+            (conv1): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (conv2): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (quant): FloatFunctional(
+              (activation_post_process): Identity()
+            )
+          )
+        )
+      )
+    )
+    (p4): Sequential(
+      (0): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (1): CSP(
+        (conv1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (conv2): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (quant): FloatFunctional(
+          (activation_post_process): Identity()
+        )
+        (res_m): ModuleList(
+          (0-1): 2 x Residual(
+            (conv1): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (conv2): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (quant): FloatFunctional(
+              (activation_post_process): Identity()
+            )
+          )
+        )
+      )
+    )
+    (p5): Sequential(
+      (0): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (1): CSP(
+        (conv1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (conv2): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(384, 256, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (quant): FloatFunctional(
+          (activation_post_process): Identity()
+        )
+        (res_m): ModuleList(
+          (0): Residual(
+            (conv1): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (conv2): Conv(
+              (conv): ConvBnReLU(
+                (weight_quantizer): QuantizationManager()
+                (activation_quantizer): QuantizationManager()
+                (conv_fuse): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              )
+              (norm): Identity()
+              (relu): Identity()
+            )
+            (quant): FloatFunctional(
+              (activation_post_process): Identity()
+            )
+          )
+        )
+      )
+      (2): SPP(
+        (conv1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (conv2): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (res_m): MaxPool2d(kernel_size=5, stride=1, padding=2, dilation=1, ceil_mode=False)
+        (quant): FloatFunctional(
+          (activation_post_process): Identity()
+        )
+      )
+    )
+  )
+  (fpn): DarkFPN(
+    (up): Upsample(scale_factor=2.0, mode='nearest')
+    (h1): CSP(
+      (conv1): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(384, 128, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (conv2): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(192, 128, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (quant): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+      (res_m): ModuleList(
+        (0): Residual(
+          (conv1): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (conv2): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (quant): FloatFunctional(
+            (activation_post_process): Identity()
+          )
+        )
+      )
+    )
+    (h2): CSP(
+      (conv1): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(192, 64, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (conv2): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(96, 64, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (quant): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+      (res_m): ModuleList(
+        (0): Residual(
+          (conv1): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (conv2): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (quant): FloatFunctional(
+            (activation_post_process): Identity()
+          )
+        )
+      )
+    )
+    (h3): Conv(
+      (conv): ConvBnReLU(
+        (weight_quantizer): QuantizationManager()
+        (activation_quantizer): QuantizationManager()
+        (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      )
+      (norm): Identity()
+      (relu): Identity()
+    )
+    (h4): CSP(
+      (conv1): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(192, 128, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (conv2): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(192, 128, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (quant): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+      (res_m): ModuleList(
+        (0): Residual(
+          (conv1): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (conv2): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (quant): FloatFunctional(
+            (activation_post_process): Identity()
+          )
+        )
+      )
+    )
+    (h5): Conv(
+      (conv): ConvBnReLU(
+        (weight_quantizer): QuantizationManager()
+        (activation_quantizer): QuantizationManager()
+        (conv_fuse): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      )
+      (norm): Identity()
+      (relu): Identity()
+    )
+    (h6): CSP(
+      (conv1): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(384, 256, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (conv2): Conv(
+        (conv): ConvBnReLU(
+          (weight_quantizer): QuantizationManager()
+          (activation_quantizer): QuantizationManager()
+          (conv_fuse): Conv2d(384, 256, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (norm): Identity()
+        (relu): Identity()
+      )
+      (quant): FloatFunctional(
+        (activation_post_process): Identity()
+      )
+      (res_m): ModuleList(
+        (0): Residual(
+          (conv1): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (conv2): Conv(
+            (conv): ConvBnReLU(
+              (weight_quantizer): QuantizationManager()
+              (activation_quantizer): QuantizationManager()
+              (conv_fuse): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            )
+            (norm): Identity()
+            (relu): Identity()
+          )
+          (quant): FloatFunctional(
+            (activation_post_process): Identity()
+          )
+        )
+      )
+    )
+    (fn1): FloatFunctional(
+      (activation_post_process): Identity()
+    )
+    (fn2): FloatFunctional(
+      (activation_post_process): Identity()
+    )
+    (fn3): FloatFunctional(
+      (activation_post_process): Identity()
+    )
+    (fn4): FloatFunctional(
+      (activation_post_process): Identity()
+    )
+  )
+  (head): Head(
+    (fn): FloatFunctional(
+      (activation_post_process): Identity()
+    )
+    (box): ModuleList(
+      (0): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(64, 4, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (1): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(64, 4, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (2): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(256, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(64, 4, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (cls): ModuleList(
+      (0): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(64, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(80, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(80, 20, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (1): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(128, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(80, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(80, 20, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (2): Sequential(
+        (0): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(256, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (1): Conv(
+          (conv): ConvBnReLU(
+            (weight_quantizer): QuantizationManager()
+            (activation_quantizer): QuantizationManager()
+            (conv_fuse): Conv2d(80, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (norm): Identity()
+          (relu): Identity()
+        )
+        (2): Conv2d(80, 20, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+  )
+)

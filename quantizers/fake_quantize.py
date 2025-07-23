@@ -4,7 +4,6 @@ import torch.nn as nn
 import sys
 sys.path.append("../")
 from quantizers.quantization_manager import QuantizationManager
-from utils.registry import CLASS_REGISTRY
 
 class FakeQuantize(nn.Module):
     def __init__(self,
@@ -14,8 +13,8 @@ class FakeQuantize(nn.Module):
         quantizer_a_name: str,
         w_symmetric: bool = True,
         a_symmetric: bool = True,
-        bits_w: int=8,
-        bits_a: int=8,
+        bits_w: int=4,
+        bits_a: int=4,
         quantize_out:bool=True,
         training=True
     ):

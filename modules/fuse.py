@@ -49,7 +49,9 @@ def _fuse_modules(model, fuse_patterns, config_manager=None):
             continue
         modules_to_fuse = []
         for module_name, module in model.named_modules():
-            if not hasattr(module, "_modules") or len(module._modules) < len(pattern):
+            if not hasattr(module, "_modules") or\
+                module_name.endswith("conv_fuse") or module_name.endswith("linear_fuse") \
+                    or len(module._modules) < len(pattern):
                 continue
             child_names = list(module._modules.keys())
             i = 0

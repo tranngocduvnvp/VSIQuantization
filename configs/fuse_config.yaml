@@ -9,7 +9,7 @@ default:
   quantizer_a_name: "UniformQuantizer"
   w_symmetric: true
   a_symmetric: true
-  is_fuse_bn: true
+  is_fuse_bn: false
 
 # Layer-specific configurations
 # Patterns support regex matching

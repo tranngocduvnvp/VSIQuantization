@@ -13,6 +13,25 @@ from modules.fuse_config import (
     create_fuse_config_manager
 )
 
+from utils.quantize_manager import (
+    calibrate_qat_model,
+    activate_learning_qparam,
+    deactivate_learning_qparam,
+    activate_quantizer,
+    deactivate_quantizer
+)
+import random
+import numpy as np
+
+def set_seed(seed=42):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+    # Ð?m b?o k?t qu? reproducible (dù có th? hoi ch?m)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 class SimpleModel(nn.Module):
     """Simple model for demonstration purposes."""
@@ -216,15 +235,62 @@ def demo_layer_specific_config():
     print(f"Fused model has {sum(p.numel() for p in fused_model.parameters())} parameters")
     print("Fusion completed with dynamic layer-specific config!\n")
 
+def test_quantization_utils():
+    print("=== Test Quantization Utils ===")
+    # Tạo model và fuse như demo_yaml_config
+    model = SimpleModel()
+    fuse_patterns = [
+        ["conv", "bn", "relu"],
+        ["linear", "bn", "relu"]
+    ]
+    config_manager = load_fuse_config_from_yaml("configs/fuse_config.yaml")
+    print(f"Loaded config from YAML with patterns: {config_manager.get_all_patterns()}")
+
+    # Giả sử bạn có config_manager, hoặc dùng None để dùng mặc định
+    fused_model = fuse_modules_unified(
+        model, 
+        fuse_patterns, 
+        is_trace=False,
+        config_manager=config_manager
+    )
+
+    print(fused_model)
+    
+    # Tạo dataloader giả lập
+    dummy_data = torch.randn(4, 3, 224, 224)
+    dataloader = [(dummy_data,)]  # Đơn giản hóa cho test
+
+    print("qparam of fused module before:", fused_model.backbone_conv1.weight_quantizer.scale)
+    # Calibration
+    # calibrate_qat_model(fused_model, dataloader)
+    # print("Calibration done.")
+
+    # print("qparam of fused module after:", fused_model.backbone_conv1.weight_quantizer.scale)
+    # # Bật learning scale cho toàn bộ model
+    # activate_learning_qparam(fused_model)
+    # print("Learning scale activated for all layers.")
+    # print("qparam of fused module after init:", fused_model.backbone_conv1.activation_quantizer.scale)
+    # print("--")
+    # print("required_grad of fused module after:", fused_model.backbone_conv1.weight_quantizer.scale.requires_grad)
+
+
+
+    # In trạng thái một số layer để xác nhận
+    for name, module in fused_model.named_modules():
+        if hasattr(module, "weight_quantizer"):
+            print(f"{name}: is_learning_scale={module.weight_quantizer.is_learning_scale}, is_quantize={module.weight_quantizer.is_quantize}")
+
+# Thêm vào cuối file hoặc gọi trong main()
 
 def main():
+    # set_seed(123)
     """Run all demos."""
     print("Fuse Configuration System Demo")
     print("=" * 50)
     
     # Run all demos
     # demo_programmatic_config()
-    demo_yaml_config()
+    test_quantization_utils()
     # demo_default_config()
     # demo_layer_specific_config()
     
