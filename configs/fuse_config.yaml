@@ -1,0 +1,76 @@
+# Fuse Configuration File
+# This file defines quantization and observer settings for different layers
+
+# Default configuration for all layers
+default:
+  observer_w_name: "MinMaxObserver"
+  quantizer_w_name: "UniformQuantizer"
+  observer_a_name: "MinMaxObserver"
+  quantizer_a_name: "UniformQuantizer"
+  w_symmetric: true
+  a_symmetric: true
+  is_fuse_bn: true
+  bits_w: 2
+  bits_a: 4
+
+# Layer-specific configurations
+# Patterns support regex matching
+layers:
+  # All convolution layers in backbone
+  "backbone.*conv":
+    observer_w_name: "MinMaxObserver"
+    quantizer_w_name: "UniformQuantizer"
+    observer_a_name: "MinMaxObserver"
+    quantizer_a_name: "UniformQuantizer"
+    w_symmetric: false
+    a_symmetric: true
+    is_fuse_bn: true
+    bits_w: 4
+    bits_a: 4
+  
+  # All linear layers in head
+  "head.*linear":
+    observer_w_name: "MinMaxObserver"
+    quantizer_w_name: "UniformQuantizer"
+    observer_a_name: "MinMaxObserver"
+    quantizer_a_name: "UniformQuantizer"
+    w_symmetric: true
+    a_symmetric: true
+    is_fuse_bn: false
+    bits_w: 4
+    bits_a: 4  
+  # Specific layer by exact name
+  "features.0":
+    observer_w_name: "MinMaxObserver"
+    quantizer_w_name: "UniformQuantizer"
+    observer_a_name: "MinMaxObserver"
+    quantizer_a_name: "UniformQuantizer"
+    w_symmetric: false
+    a_symmetric: true
+    is_fuse_bn: true
+    bits_w: 4
+    bits_a: 4
+
+  # All layers containing "stem"
+  ".*stem.*":
+    observer_w_name: "MinMaxObserver"
+    quantizer_w_name: "UniformQuantizer"
+    observer_a_name: "MinMaxObserver"
+    quantizer_a_name: "UniformQuantizer"
+    w_symmetric: true
+    a_symmetric: true
+    is_fuse_bn: true
+    bits_w: 4
+    bits_a: 4
+
+  # All layers containing "classifier"
+  ".*classifier.*":
+    observer_w_name: "MinMaxObserver"
+    quantizer_w_name: "UniformQuantizer"
+    observer_a_name: "MinMaxObserver"
+    quantizer_a_name: "UniformQuantizer"
+    w_symmetric: false
+    a_symmetric: true
+    is_fuse_bn: false 
+    bits_w: 4
+    bits_a: 4

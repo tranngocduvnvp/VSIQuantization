@@ -1,0 +1,41 @@
+lr0: 0.000010000000000            # initial learning rate (SGD=1E-2, Adam=1E-3)
+lrf: 0.010000000000000            # final OneCycleLR learning rate (lr0 * lrf)
+momentum: 0.9370000000            # SGD momentum/Adam beta1
+weight_decay: 0.000000            # optimizer weight decay 5E-4
+warmup_epochs: 1.00000            # warmup epochs
+warmup_momentum: 0.800            # warmup initial momentum
+warmup_bias_lr: 0.1000            # warmup initial bias lr
+box: 7.500000000000000            # box loss gain
+cls: 0.500000000000000            # cls loss gain
+hsv_h: 0.0150000000000            # image HSV-Hue augmentation (fraction)
+hsv_s: 0.7000000000000            # image HSV-Saturation augmentation (fraction)
+hsv_v: 0.4000000000000            # image HSV-Value augmentation (fraction)
+degrees: 0.00000000000            # image rotation (+/- deg)
+translate: 0.100000000            # image translation (+/- fraction)
+scale: 0.5000000000000            # image scale (+/- gain)
+shear: 0.0000000000000            # image shear (+/- deg)
+flip_ud: 0.00000000000            # image flip up-down (probability)
+flip_lr: 0.50000000000            # image flip left-right (probability)
+mosaic: 0.000000000000            # image mosaic (probability)
+mix_up: 0.000000000000            # image mix-up (probability)
+names:
+  0: aeroplane
+  1: bicycle
+  2: bird
+  3: boat
+  4: bottle
+  5: bus
+  6: car
+  7: cat
+  8: chair
+  9: cow
+  10: diningtable
+  11: dog
+  12: horse
+  13: motorbike
+  14: person
+  15: pottedplant
+  16: sheep
+  17: sofa
+  18: train
+  19: tvmonitor
