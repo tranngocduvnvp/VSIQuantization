@@ -1,58 +1,69 @@
-# Fuse Configuration System
+# VSIQuantization
 
-Hệ thống cấu hình linh hoạt cho việc fuse các layer trong model quantization.
+A flexible quantization-aware training (QAT) framework for deep neural networks with support for layer fusion and learnable quantization parameters.
 
-## Tổng quan
+## Features
 
-Hệ thống này cho phép bạn định nghĩa các tham số quantization và observer khác nhau cho từng layer hoặc nhóm layer, thay vì sử dụng các giá trị hardcode như trước đây.
+- Multiple quantization schemes:
+  - Uniform quantization
+  - Learned Step-size Quantization (LSQ)
+  - Support for symmetric and asymmetric quantization
+  
+- Layer fusion capabilities:
+  - Conv + BatchNorm + ReLU/SiLU
+  - Conv + BatchNorm
+  - Conv + ReLU/SiLU
+  - Linear + BatchNorm + ReLU/SiLU
+  - Linear + BatchNorm
+  - Linear + ReLU/SiLU
 
-## Các thành phần chính
+- Flexible configuration system:
+  - Per-layer quantization settings
+  - Pattern-based layer matching
+  - YAML configuration support
+  
+- Advanced calibration:
+  - Batch normalization statistics re-estimation
+  - Gradient scaling optimization
+  - Statistical parameter initialization
 
-### 1. FuseConfig
-Class chứa các tham số cấu hình cho một layer:
-- `observer_w_name`: Tên observer cho weights
-- `quantizer_w_name`: Tên quantizer cho weights  
-- `observer_a_name`: Tên observer cho activations
-- `quantizer_a_name`: Tên quantizer cho activations
-- `w_symmetric`: Có sử dụng symmetric quantization cho weights không
-- `a_symmetric`: Có sử dụng symmetric quantization cho activations không
-- `is_fuse_bn`: Có fuse batch normalization không
+## Installation
 
-### 2. FuseConfigManager
-Class quản lý các cấu hình cho nhiều layer:
-- Hỗ trợ pattern matching (regex) để áp dụng config cho nhóm layer
-- Có config mặc định cho các layer không match
-- Cho phép thêm/xóa config động
+```bash
+# Clone the repository
+git clone https://github.com/your-username/VSIQuantization.git
+cd VSIQuantization
 
-### 3. Các hàm tiện ích
-- `load_fuse_config_from_yaml()`: Load config từ file YAML
-- `create_fuse_config_manager()`: Tạo config manager từ code
+# Install dependencies
+pip install torch torchvision
+```
 
-## Cách sử dụng
+## Usage
 
-### 1. Sử dụng config mặc định
+### Basic Usage
 
 ```python
 from modules.fuse import fuse_modules_unified
 
-# Fuse với config mặc định
+# Fuse layers with default configuration
 fused_model = fuse_modules_unified(model, fuse_patterns)
 ```
 
-### 2. Tạo config programmatically
+### Custom Configuration
 
 ```python
 from modules.fuse_config import FuseConfig, create_fuse_config_manager
-from modules.fuse import fuse_modules_unified
 
-# Tạo config manager với các cấu hình tùy chỉnh
+# Create custom configuration
 config_manager = create_fuse_config_manager(
     default_config=FuseConfig(
         observer_w_name="MinMaxObserver",
         quantizer_w_name="UniformQuantizer",
         w_symmetric=True,
         a_symmetric=True,
-        is_fuse_bn=True
+        is_fuse_bn=True,
+        bits_w=8,
+        bits_a=8
     ),
     layer_configs={
         "backbone.*conv": FuseConfig(
@@ -61,31 +72,23 @@ config_manager = create_fuse_config_manager(
             w_symmetric=False,
             a_symmetric=True,
             is_fuse_bn=True
-        ),
-        "head.*linear": FuseConfig(
-            observer_w_name="MinMaxObserver", 
-            quantizer_w_name="UniformQuantizer",
-            w_symmetric=True,
-            a_symmetric=True,
-            is_fuse_bn=False
         )
     }
 )
 
-# Fuse với config
+# Fuse with custom config
 fused_model = fuse_modules_unified(
     model, 
-    fuse_patterns, 
+    fuse_patterns,
     config_manager=config_manager
 )
 ```
 
-### 3. Load config từ file YAML
+### YAML Configuration
 
-Tạo file `configs/fuse_config.yaml`:
+Create `configs/fuse_config.yaml`:
 
 ```yaml
-# Config mặc định
 default:
   observer_w_name: "MinMaxObserver"
   quantizer_w_name: "UniformQuantizer"
@@ -94,8 +97,9 @@ default:
   w_symmetric: true
   a_symmetric: true
   is_fuse_bn: true
+  bits_w: 8
+  bits_a: 8
 
-# Config cho từng nhóm layer
 layers:
   "backbone.*conv":
     observer_w_name: "LSQObserver"
@@ -103,118 +107,92 @@ layers:
     w_symmetric: false
     a_symmetric: true
     is_fuse_bn: true
-  
-  "head.*linear":
-    observer_w_name: "MinMaxObserver"
-    quantizer_w_name: "UniformQuantizer"
-    w_symmetric: true
-    a_symmetric: true
-    is_fuse_bn: false
 ```
 
-Load và sử dụng:
+Load and use the configuration:
 
 ```python
 from modules.fuse_config import load_fuse_config_from_yaml
-from modules.fuse import fuse_modules_unified
 
-# Load config từ YAML
 config_manager = load_fuse_config_from_yaml("configs/fuse_config.yaml")
-
-# Fuse với config
-fused_model = fuse_modules_unified(
-    model, 
-    fuse_patterns, 
-    config_manager=config_manager
-)
+fused_model = fuse_modules_unified(model, fuse_patterns, config_manager=config_manager)
 ```
 
-### 4. Thêm config động
+## Components
+
+### Quantizers
+
+- `UniformQuantizer`: Basic uniform quantization
+- `LSQQuantizer`: Learned Step-size Quantization with learnable scale/zero-point
+
+### Observers
+
+- `MinMaxObserver`: Tracks min/max values for scale computation
+- `LSQObserver`: Observer for LSQ quantization
+
+### Fused Layers
+
+- `ConvBnReLU`: Fused Conv2d + BatchNorm2d + ReLU/SiLU
+- `ConvBn`: Fused Conv2d + BatchNorm2d
+- `ConvReLU`: Fused Conv2d + ReLU/SiLU
+- `LinearBnReLU`: Fused Linear + BatchNorm1d + ReLU/SiLU
+- `LinearBn`: Fused Linear + BatchNorm1d
+- `LinearReLU`: Fused Linear + ReLU/SiLU
+
+### Utilities
+
+- Batch normalization statistics re-estimation
+- Gradient scaling computation
+- Model checkpoint management
+- Pattern-based layer matching
+
+## Advanced Features
+
+### Batch Norm Re-estimation
 
 ```python
-from modules.fuse_config import FuseConfigManager, FuseConfig
+from utils.estimate_bn import reestimate_BN_stats
 
-# Tạo config manager
-config_manager = FuseConfigManager()
+# Re-estimate BN statistics using calibration data
+reestimate_BN_stats(model, data_loader, num_batches=50)
+```
 
-# Thêm config cho layer cụ thể
-config_manager.add_layer_config(
-    "features.0",
-    FuseConfig(
-        observer_w_name="PerChannelMinMaxObserver",
-        quantizer_w_name="PerChannelUniformQuantizer",
-        w_symmetric=False,
-        a_symmetric=True,
-        is_fuse_bn=True
-    )
-)
+### Gradient Scale Optimization
 
-# Fuse với config
-fused_model = fuse_modules_unified(
-    model, 
-    fuse_patterns, 
-    config_manager=config_manager
-)
+```python
+from utils.estimate_bn import compute_scale
+
+# Compute optimal gradient scales
+compute_scale(model, data_loader)
+```
+
+### Quantization Management
+
+```python
+from utils.quantize_manager import calibrate_qat_model, activate_learning_qparam
+
+# Calibrate quantization parameters
+calibrate_qat_model(model, data_loader, data_calib)
+
+# Enable learnable parameters
+activate_learning_qparam(model)
 ```
 
 ## Pattern Matching
 
-Hệ thống hỗ trợ pattern matching để áp dụng config cho nhóm layer:
+The configuration system supports pattern matching for layer groups:
 
-- `"backbone.*conv"`: Tất cả conv layer trong backbone
-- `"head.*linear"`: Tất cả linear layer trong head  
-- `".*stem.*"`: Tất cả layer chứa "stem"
-- `"features.0"`: Layer cụ thể có tên "features.0"
+- `"backbone.*conv"`: All conv layers in backbone
+- `"head.*linear"`: All linear layers in head
+- `".*stem.*"`: All layers containing "stem"
+- `"features.0"`: Specific layer named "features.0"
 
-Pattern matching sử dụng regex, nếu regex không hợp lệ sẽ fallback về substring matching.
+Pattern matching uses regex with fallback to substring matching.
 
-## API Reference
+## Contributing
 
-### FuseConfig
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-```python
-class FuseConfig:
-    def __init__(
-        self,
-        observer_w_name: str = "MinMaxObserver",
-        quantizer_w_name: str = "UniformQuantizer",
-        observer_a_name: str = "MinMaxObserver", 
-        quantizer_a_name: str = "UniformQuantizer",
-        w_symmetric: bool = True,
-        a_symmetric: bool = True,
-        is_fuse_bn: bool = True
-    )
-```
+## License
 
-### FuseConfigManager
-
-```python
-class FuseConfigManager:
-    def __init__(self, default_config: Optional[FuseConfig] = None)
-    def add_layer_config(self, layer_pattern: str, config: FuseConfig)
-    def get_config_for_layer(self, layer_name: str) -> FuseConfig
-    def set_default_config(self, config: FuseConfig)
-    def clear_layer_configs(self)
-    def get_all_patterns(self) -> list
-```
-
-### Hàm tiện ích
-
-```python
-def load_fuse_config_from_yaml(yaml_path: str) -> FuseConfigManager
-def create_fuse_config_manager(
-    default_config: Optional[FuseConfig] = None,
-    layer_configs: Optional[Dict[str, Union[FuseConfig, Dict]]] = None
-) -> FuseConfigManager
-```
-
-## Ví dụ hoàn chỉnh
-
-Xem file `examples/fuse_config_demo.py` để có ví dụ chi tiết về cách sử dụng tất cả các tính năng.
-
-## Lưu ý
-
-1. Config được áp dụng cho layer đầu tiên trong pattern fuse
-2. Nếu không tìm thấy config cho layer, sẽ sử dụng config mặc định
-3. Hệ thống tương thích ngược với code cũ (không cần config_manager)
-4. Hỗ trợ cả tracing và non-tracing fusion 
+This project is licensed under the MIT License - see the LICENSE file for details. 
